@@ -1,3 +1,4 @@
+#
 class Test:
     instances = []
     x = 0
