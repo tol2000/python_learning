@@ -6,7 +6,6 @@ class Test:
     def __init__(self):
         self.instances.append(id(self))
         self.x += 1
-        Test.x += 1
         print(f'self.instances = {self.instances}')
         print(f'self.x = {self.x}')
         print(f'Test.x = {Test.x}')
