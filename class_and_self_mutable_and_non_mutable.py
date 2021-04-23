@@ -1,14 +1,15 @@
 #
 class Test:
     instances = []
-    x = 0
+    x = 5
 
     def __init__(self):
         self.instances.append(id(self))
-        self.x += 1
+        self.x = 6
         print(f'self.instances = {self.instances}')
-        print(f'self.x = {self.x}')
+        print(f'Test.instances = {self.instances}')
         print(f'Test.x = {Test.x}')
+        print(f'self.x = {self.x}')
 
 
 a = Test()
