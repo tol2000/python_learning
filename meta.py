@@ -1,3 +1,5 @@
+# lecture 5 0:47
+
 def dict_wo_dunder(dct: dict):
     dct1 = {}
     for key in dct.keys():
@@ -11,7 +13,6 @@ def print_namespaces_with_parents(cls):
         if parent.__name__ != 'object':
             print_namespaces_with_parents(parent)
     print(f"{cls.__name__}: {dict_wo_dunder(cls.__dict__)}")
-
 
 
 class MyMetaClass(type):
