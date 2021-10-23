@@ -1,4 +1,4 @@
-# lecture 5 0:47
+# lecture 5 1:00
 
 def dict_wo_dunder(dct: dict):
     dct1 = {}
