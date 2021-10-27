@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from lesson6.homework.vehicles.vehicle_exceptions import CargoWeightError
+from lesson6.homework.vehicle_exceptions import cargo_weight_error
 
 
 class BaseVehicle(metaclass=ABCMeta):
@@ -25,9 +25,5 @@ class BaseVehicle(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def start_engine(self):
-        """
-        How vehicle starts its engine
-        :return:
-        """
+    def go(self, kilometers):
         raise NotImplementedError
