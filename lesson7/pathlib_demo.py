@@ -1,11 +1,17 @@
 from pathlib import Path
 
-p = Path('/home/tolic')
+home = Path('/home/tolic')
 
-print(f"repr('{p}'): {p.__repr__()}")
-print(f"exists('{p}'): {p.exists()}")
-print(f"parent of '{p}': {p.parent.__repr__()}")
+print(f"repr('{home}'): {home.__repr__()}")
+print(f"exists('{home}'): {home.exists()}")
+print(f"parent of '{home}': {home.parent.__repr__()}")
 
 # for key in dir(p):
 #     if not key.startswith('_'):
 #         print(f'{key}: {getattr(p,key)}')
+
+down = Path('Download')
+
+pa = home / down / 'torrents'
+
+print(pa / "111" / "222")
