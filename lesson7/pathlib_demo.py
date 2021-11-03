@@ -1,3 +1,5 @@
+import os
+import pathlib
 from pathlib import Path
 
 home = Path('/home/tolic')
