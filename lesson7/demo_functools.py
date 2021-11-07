@@ -1,7 +1,10 @@
+from functools import lru_cache
+
 from lesson7.trace import trace_explorer
 
 
-@trace_explorer(max_level_to_display=3)
+@lru_cache(maxsize=4096)
+@trace_explorer(max_level_to_display=-1)
 def fib(n):
     if n <= 1:
         return n
@@ -17,6 +20,8 @@ def test_recurcive(lvl):
     return lvl
 
 
-print(fib(30))
-print("\n")
-test_recurcive(400)
+# print(fib(30))
+# print("\n")
+# test_recurcive(400)
+
+print([fib(i) for i in range(100)])
