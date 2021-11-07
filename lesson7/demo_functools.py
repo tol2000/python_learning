@@ -1,9 +1,50 @@
-from functools import lru_cache
+from functools import lru_cache, wraps
 
 from lesson7.trace import trace_explorer
 
 
-@lru_cache(maxsize=4096)
+def tol_lru_cache(func):
+    cache = {}
+
+    @wraps(func)
+    def wrapper(*args):
+        # ??? func(*args) always calls, even if key already present in cache
+        # may be< set lazy computing?..
+        cache.setdefault(args, func(*args))
+        return cache[args]
+
+    return wrapper
+
+
+def tol1_lru_cache(func):
+    cache = {}
+
+    @wraps(func)
+    def wrapper(*args):
+        if not cache.keys().__contains__(args):
+            cache.setdefault(args, func(*args))
+        return cache[args]
+
+    return wrapper
+
+
+def my_lru_cache(func):
+    cache = {}
+
+    @wraps(func)
+    def wrapper(*args):
+        try:
+            return cache[args]
+        except KeyError:
+            pass
+        res = func(*args)
+        cache[args] = res
+        return res
+
+    return wrapper
+
+
+@tol1_lru_cache
 @trace_explorer(max_level_to_display=-1)
 def fib(n):
     if n <= 1:
@@ -24,4 +65,10 @@ def test_recurcive(lvl):
 # print("\n")
 # test_recurcive(400)
 
-print([fib(i) for i in range(100)])
+max_v = 1000
+
+list1 = [fib(i) for i in range(max_v)]
+
+print(f'{list1[0]}..{list1[max_v-1]}')
+print(f'{list1[0]}..{list1[max_v-1]+1}')
+print(f'{type(list1[0])}..{type(list1[max_v-1])}')
