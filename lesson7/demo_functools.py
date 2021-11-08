@@ -44,7 +44,23 @@ def my_lru_cache(func):
     return wrapper
 
 
-@tol1_lru_cache
+# instead of previous with two returns and no-needed pass )
+def my_lru_cache_corr(func):
+    cache = {}
+
+    @wraps(func)
+    def wrapper(*args):
+        try:
+            res = cache[args]
+        except KeyError:
+            res = func(*args)
+            cache[args] = res
+        return res
+
+    return wrapper
+
+
+@my_lru_cache_corr
 @trace_explorer(max_level_to_display=-1)
 def fib(n):
     if n <= 1:
