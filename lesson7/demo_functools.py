@@ -1,6 +1,14 @@
 from functools import lru_cache, wraps
 
 from lesson7.trace import trace_explorer
+import time
+from functools import partial
+
+p = partial(print, "On", f"\"{time.asctime()}\"", "printed:")
+
+p(1)
+p("e bebe")
+p("spam", "and", "eggs")
 
 
 def tol_lru_cache(func):
@@ -85,6 +93,6 @@ max_v = 1000
 
 list1 = [fib(i) for i in range(max_v)]
 
-print(f'{list1[0]}..{list1[max_v-1]}')
-print(f'{list1[0]}..{list1[max_v-1]+1}')
-print(f'{type(list1[0])}..{type(list1[max_v-1])}')
+p(f'{list1[0]}..{list1[max_v-1]}')
+p(f'{list1[0]}..{list1[max_v-1]+1}')
+p(f'{type(list1[0])}..{type(list1[max_v-1])}')
