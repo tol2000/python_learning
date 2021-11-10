@@ -1,6 +1,8 @@
 from itertools import combinations_with_replacement, combinations
 from functools import reduce
 
+from lesson7.list_all_words_generator import ListAllWords
+
 max_len = 2
 
 nums = [0, 1]
@@ -10,11 +12,13 @@ for comb in combinations(nums, max_len):
 
 print('\n')
 
-# alphabet = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
-a_string = 'абвгдеёжзийклмнопрстуфхцчшщьыъэюя'
+print(f'----- ListAllWords -----')
+
+# a_string = 'абвгдеёжзийклмнопрстуфхцчшщьыъэюя'
+a_string = '01'
 alphabet = [a_string[i] for i in range(0, len(a_string))]
-min_word_len = 4
-max_word_len = 5
+min_word_len = 2
+max_word_len = 2
 
 
 def list_all_words(p_alphabet, p_min_word_len, p_max_word_len):
@@ -48,7 +52,11 @@ def list_all_words(p_alphabet, p_min_word_len, p_max_word_len):
     return res
 
 
-for word_a in list_all_words(alphabet, min_word_len, max_word_len):
-    word = reduce(lambda x, y: x+y, word_a)
-    if word.__contains__('крас'):
-        print(word)
+# for word_a in list_all_words(alphabet, min_word_len, max_word_len):
+#     word = reduce(lambda x, y: x+y, word_a)
+#     if word.__contains__('крас'):
+#         print(word)
+
+it = ListAllWords(alphabet, min_word_len, max_word_len)
+for i in it:
+    print(i)
