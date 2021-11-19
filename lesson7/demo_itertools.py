@@ -13,7 +13,7 @@ print(nums)
 # for comb in combinations_with_replacement(nums, max_len):
 #     print(comb)
 
-for comb in enumerate(permutations('ABCD', 2)):
+for comb in enumerate(permutations(['A', 'B', 'C', 'D'], 2)):
     print(f'{comb[0]}:  {comb[1]}')
 
 odds = count(start=1, step=2)
