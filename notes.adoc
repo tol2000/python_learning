@@ -47,3 +47,7 @@ done
 == lecture 7
 
 1:28:56
+
+== lecture 8
+
+0:48:00
