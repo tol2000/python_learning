@@ -1,5 +1,6 @@
 import csv
 from functools import reduce
+from pprint import pprint
 
 
 def read_csv_cars():
@@ -41,6 +42,19 @@ def read_csv_cars():
         print_delimiter()
 
 
+def read_dict_cars():
+    with open("cars.csv") as f:
+        cars_dict = csv.DictReader(f)
+        print(", ".join(cars_dict.fieldnames))
+        for car in cars_dict:
+            print(
+                ", ".join([
+                    f'{title}: "{value}"' for title, value in car.items()
+                ])
+            )
+
+
 if __name__ == '__main__':
     print('\n')
-    read_csv_cars()
+    # read_csv_cars()
+    read_dict_cars()
