@@ -24,19 +24,19 @@ def read_csv_cars():
     with open("cars.csv") as f:
         csv_reader = csv.reader(f, delimiter=',')
         print_delimiter()
-        for row in enumerate(csv_reader):
+        for row_num, row in enumerate(csv_reader):
             print(
                 left_delimiter,
                 center_delimiter.join(
                     [
-                        f'{x[1]:{formats[x[0]]}}'
-                        for x in enumerate(row[1])
+                        f'{value:{formats[num]}}'
+                        for num, value in enumerate(row)
                     ]
                 ),
                 right_delimiter,
                 sep=''
             )
-            if row[0] == 0:
+            if row_num == 0:
                 print_delimiter()
         print_delimiter()
 
