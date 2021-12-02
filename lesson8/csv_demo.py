@@ -1,4 +1,5 @@
 import csv
+from csv import DictWriter
 from functools import reduce
 from pprint import pprint
 
@@ -54,7 +55,46 @@ def read_dict_cars():
             )
 
 
+def write_csv_dict():
+    NAME = 'name'
+    DEPT = 'dept'
+    BM = 'birth_month'
+    with open('employees.csv', 'w') as f:
+        csv_writer = DictWriter(f, [NAME, DEPT, BM])
+        csv_writer.writeheader()
+        csv_writer.writerows(
+            [
+                {
+                    NAME: 'Tolyan',
+                    DEPT: 'IT',
+                    BM: 'July'
+                },
+                {
+                    NAME: 'Mommy',
+                    DEPT: 'Mothers',
+                    BM: 'June'
+                },
+                {
+                    NAME: 'Mike',
+                    DEPT: '7th km',
+                    BM: 'August'
+                },
+                {
+                    NAME: 'Marine',
+                    DEPT: 'Cutting shop',
+                    BM: 'March'
+                },
+                {
+                    NAME: 'Tucson',
+                    DEPT: 'plant, garage',
+                    BM: None
+                },
+            ]
+        )
+
+
 if __name__ == '__main__':
     print('\n')
     # read_csv_cars()
-    read_dict_cars()
+    # read_dict_cars()
+    write_csv_dict()
