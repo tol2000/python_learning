@@ -50,4 +50,15 @@ done
 
 == lecture 8
 
-0:57:30
+2DO:
+
+* See lists, arrays in ini (filename[])
+* try to write to ini only one value in certain section
+  to preserve comments and others in original ini
+
+the end
+
+== Lecture 9
+
+0:00:00
+
