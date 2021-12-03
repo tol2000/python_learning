@@ -55,8 +55,12 @@ done
 * See lists, arrays in ini (filename[])
 * try to write to ini only one value in certain section
   to preserve comments and others in original ini
+* Fallback/default values does not work for me for a while...
+* exception configparser.DuplicateOptionError: While reading from '<string>' [line 11]: option 'multiline' in section 'System' already exists
 
 the end
+
+
 
 == Lecture 9
 

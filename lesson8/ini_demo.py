@@ -1,4 +1,7 @@
+import configparser
 from configparser import ConfigParser
+
+from configupdater import ConfigUpdater
 
 delimiter = 50 * '-'
 mega_delimiter = '\n' + 3 * ('\n' + 100 * '*') + 2 * '\n'
@@ -13,9 +16,21 @@ def print_ini(ini):
     print(delimiter)
 
 
-def parse_config_and_write():
-    ini = ConfigParser()
+def print_ini_updater(ini: ConfigUpdater):
+    for section_name, section in list(ini.items())[::-1]:
+        print(delimiter)
+        print(f'[{section_name}]')
+        for name, option in section.items():
+            # print(type(option), option)
+            print(f'  {option.key} = "{option.value}"')
+    print(delimiter)
+
+
+def parse_config_and_write(if_write=False):
+    # can not preserve comments at all (
+    ini = ConfigParser(comment_prefixes=(';', '#'))
     ini.read("logman.ini", encoding='windows-1251')
+
     print_ini(ini)
 
     item = ('REM_Log_Tolyan_10', 'daysold')
@@ -33,13 +48,79 @@ def parse_config_and_write():
     print(f'{section_name}.{par_name} = {val}')
     print(delimiter)
 
+    if if_write:
+        # Writing count demo...
+        section_name = 'System'
+        system = ini[section_name]
+
+        system['multiline'] = """
+        'This is'
+        '  a multiline with quotation'
+        '  and indentation test value!'
+        """
+
+        par_name = 'Count'
+        count = system.getint(par_name, fallback=0)
+        count += 1
+        system[par_name] = str(count)
+        with open('logman.ini', 'w', encoding='windows-1251') as ini_file:
+            ini.write(ini_file)
+
+
+def parse_config_and_write_with_configupdater():
+    ini = ConfigUpdater()
+    ini.read("logman.ini", encoding='windows-1251')
+
+    print_ini_updater(ini)
+
+    option = ini['REM_Log_Tolyan_10']['daysold']
+    val = float(option.value)
+    print(f'[{option.section.name}].{option.key}: {type(val)} = "{val}"')
+    print(delimiter)
+
+    section_name = 'Interface'
+    interface = ini[section_name]
+    par_name = 'iconblinkinterval'
+    val = interface[par_name].value
+    print(f'{section_name}.{par_name} = {val}')
+    # Fallback/default values does not work for me for a while...
+    # par_name = 'dummy_int'
+    # val = interface.get(key=par_name)
+    # val = val if val else 0
+    # print(f'{section_name}.{par_name} = {val}')
+    # par_name = 'HotKey1'
+    # val = interface[par_name].value
+    # val = val if val else 0
+    # print(f'{section_name}.{par_name} = {val}')
+    print(delimiter)
+
     # Writing count demo...
     section_name = 'System'
     system = ini[section_name]
-    par_name = 'Count'
-    count = system.getint(par_name, fallback=0)
-    count += 1
-    system[par_name] = str(count)
+
+    par_name = 'multiline'
+    try:
+        system.add_option(system.create_option(
+            key=par_name,
+            value="""
+                'This is'
+                '  a multiline with quotation'
+                '  and indentation test value!'
+            """
+        ))
+    except configparser.DuplicateOptionError:
+        # ?????
+        pass
+
+    # Fallback/default values does not work for me for a while...
+    # par_name = 'Count'
+    # # count = system[par_name].value
+    # # system[par_name].value raises exception if no such option, but system.get return None
+    # count = system.get(key=par_name)
+    # count = count if count else 0
+    # count += 1
+    # system[par_name].value = str(count)
+
     with open('logman.ini', 'w', encoding='windows-1251') as ini_file:
         ini.write(ini_file)
 
@@ -72,6 +153,11 @@ def config_as_dict():
 
 if __name__ == '__main__':
     print('\n')
-    parse_config_and_write()
-    print(mega_delimiter)
-    config_as_dict()
+    # this configparser does not preserve comments :(
+    # parse_config_and_write(if_write=False)
+
+    # But this one must preserve comments and do other additional things! :)
+    parse_config_and_write_with_configupdater()
+
+    # print(mega_delimiter)
+    # config_as_dict()
