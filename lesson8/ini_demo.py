@@ -1,7 +1,7 @@
 import configparser
 from configparser import ConfigParser
 
-from configupdater import ConfigUpdater
+from configupdater import ConfigUpdater, Option
 
 delimiter = 50 * '-'
 mega_delimiter = '\n' + 3 * ('\n' + 100 * '*') + 2 * '\n'
@@ -83,15 +83,14 @@ def parse_config_and_write_with_configupdater():
     par_name = 'iconblinkinterval'
     val = interface[par_name].value
     print(f'{section_name}.{par_name} = {val}')
-    # Fallback/default values does not work for me for a while...
-    # par_name = 'dummy_int'
-    # val = interface.get(key=par_name)
-    # val = val if val else 0
-    # print(f'{section_name}.{par_name} = {val}')
-    # par_name = 'HotKey1'
-    # val = interface[par_name].value
-    # val = val if val else 0
-    # print(f'{section_name}.{par_name} = {val}')
+    par_name = 'dummy_int'
+    val = interface.get(par_name, default=Option(par_name, '0')).value
+    val = val if val else 0
+    print(f'{section_name}.{par_name} = {val}')
+    par_name = 'HotKey'
+    val = interface[par_name].value
+    val = val if val else 0
+    print(f'{section_name}.{par_name} = {val}')
     print(delimiter)
 
     # Writing count demo...
@@ -100,16 +99,20 @@ def parse_config_and_write_with_configupdater():
 
     par_name = 'multiline'
     try:
+        # WTF! In this place exception configparser.DuplicateOptionError not raised!
+        # It raised only during ini.update_file() !
+        # So at this place we have duplicate option 'multiline' without even any warnings
         system.add_option(system.create_option(
             key=par_name,
             value="""
-                'This is'
+                'Ok, it's'
                 '  a multiline with quotation'
                 '  and indentation test value!'
             """
         ))
-    except configparser.DuplicateOptionError:
-        # ?????
+    except Exception as e:
+        # configparser.DuplicateOptionError
+        # print(e)
         pass
 
     # Fallback/default values does not work for me for a while...
@@ -121,8 +124,7 @@ def parse_config_and_write_with_configupdater():
     # count += 1
     # system[par_name].value = str(count)
 
-    with open('logman.ini', 'w', encoding='windows-1251') as ini_file:
-        ini.write(ini_file)
+    ini.update_file()
 
 
 def config_as_dict():
