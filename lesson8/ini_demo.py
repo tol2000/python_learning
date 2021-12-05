@@ -98,22 +98,31 @@ def parse_config_and_write_with_configupdater():
     system = ini[section_name]
 
     par_name = 'multiline'
-    try:
-        # WTF! In this place exception configparser.DuplicateOptionError not raised!
-        # It raised only during ini.update_file() !
-        # So at this place we have duplicate option 'multiline' without even any warnings
+    # try:
+    #     # WTF! In this place exception configparser.DuplicateOptionError not raised!
+    #     # It raised only during ini.update_file() !
+    #     # So at this place we have duplicate option 'multiline' without even any warnings
+    #     system.add_option(system.create_option(
+    #         key=par_name,
+    #         value="""
+    #             'Ok, it's'
+    #             '  a multiline with quotation'
+    #             '  and indentation test value!'
+    #         """
+    #     ))
+    # except Exception as e:
+    #     # configparser.DuplicateOptionError
+    #     # print(e)
+    #     pass
+    if not system.get(par_name):
         system.add_option(system.create_option(
-            key=par_name,
-            value="""
-                'Ok, it's'
-                '  a multiline with quotation'
-                '  and indentation test value!'
-            """
-        ))
-    except Exception as e:
-        # configparser.DuplicateOptionError
-        # print(e)
-        pass
+                key=par_name,
+                value="""
+                    'Ok, it's'
+                    '  a multiline with quotation'
+                    '  and indentation test value!'
+                """
+            ))
 
     # Fallback/default values does not work for me for a while...
     # par_name = 'Count'
@@ -124,7 +133,8 @@ def parse_config_and_write_with_configupdater():
     # count += 1
     # system[par_name].value = str(count)
 
-    ini.update_file()
+    with open('logman.ini', 'w', encoding='windows-1251') as f:
+        ini.write(f)
 
 
 def config_as_dict():
