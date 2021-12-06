@@ -95,6 +95,6 @@ def write_csv_dict():
 
 if __name__ == '__main__':
     print('\n')
-    # read_csv_cars()
+    read_csv_cars()
     # read_dict_cars()
-    write_csv_dict()
+    # write_csv_dict()
