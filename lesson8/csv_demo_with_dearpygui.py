@@ -8,10 +8,10 @@ READ_FILENAME_FIELD = "csv_file"
 
 
 def __read_csv_cars__():
-    # if dpg.does_alias_exist(TABLE_TAG):
-    #     dpg.delete_item(TABLE_TAG, children_only=False)
-    # if dpg.does_alias_exist(TABLE_TAG):
-    #     dpg.remove_alias(TABLE_TAG)
+    if dpg.does_alias_exist(TABLE_TAG):
+        dpg.delete_item(TABLE_TAG, children_only=False)
+    if dpg.does_alias_exist(TABLE_TAG):
+        dpg.remove_alias(TABLE_TAG)
     with dpg.table(header_row=True, resizable=True, tag=TABLE_TAG, parent=MAIN_WINDOW_TAG):
         with open(dpg.get_value(READ_FILENAME_FIELD)) as f:
             csv_reader = csv.reader(f, delimiter=',')
