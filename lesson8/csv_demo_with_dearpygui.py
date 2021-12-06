@@ -28,15 +28,15 @@ def __read_csv_cars__():
 if __name__ == '__main__':
     # os.environ["PYDEVD_USE_CYTHON"] = "YES"
     dpg.create_context()
-    dpg.create_viewport(title='CSV reader')
 
     with dpg.window(label='Read CSV', tag=MAIN_WINDOW_TAG):
         dpg.add_text('CSV reader result')
-        # with dpg.group(horizontal=True):
-        #     dpg.add_button(label="Read CSV", tag=READ_BUTTON_TAG, callback=__read_csv_cars__)
-        #     with dpg.tooltip(READ_BUTTON_TAG):
-        #         dpg.add_text("Read csv file")
+        with dpg.group(horizontal=True):
+            dpg.add_button(label="Read CSV", tag=READ_BUTTON_TAG, callback=__read_csv_cars__)
+            with dpg.tooltip(READ_BUTTON_TAG):
+                dpg.add_text("Read csv file")
 
+    dpg.create_viewport(title='CSV reader')
     dpg.setup_dearpygui()
     dpg.show_viewport()
     dpg.start_dearpygui()
