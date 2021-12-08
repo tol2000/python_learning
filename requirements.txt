@@ -2,3 +2,4 @@ ConfigUpdater
 requests
 rich
 dearpygui
+loguru
