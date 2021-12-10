@@ -19,7 +19,7 @@ async def bar():
     logger.info("async bar finishing")
 
 
-async def run_async():
+async def run_async_synchronously():
     logger.info("Start async")
     await foo()
     await bar()
@@ -27,7 +27,7 @@ async def run_async():
 
 def run_main_sync():
     logger.info('Starting main...')
-    asyncio.run(run_async())
+    asyncio.run(run_async_synchronously())
     logger.info('Finishing main...')
 
 
