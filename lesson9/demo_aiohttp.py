@@ -42,6 +42,8 @@ async def fetch_ip(service: Service) -> str:
         my_ip = f'{result[service.ip_field]} from {service.name}'
         # if service.name == 'ip-api':
         #     raise IOError
+        # if service.name == 'ipify':
+        #     raise IOError
     except:
         my_ip = None
     return my_ip
