@@ -1,4 +1,3 @@
-import _asyncio
 import asyncio
 from dataclasses import dataclass
 from aiohttp import ClientSession
