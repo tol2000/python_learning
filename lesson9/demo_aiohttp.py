@@ -1,8 +1,8 @@
+import _asyncio
 import asyncio
 from dataclasses import dataclass
 from aiohttp import ClientSession
 from loguru import logger
-from pprint import pprint
 
 
 @dataclass()
@@ -40,8 +40,8 @@ async def fetch_ip(service: Service) -> str:
             result = await fetch(session, service.url)
         logger.info(f"Got result for {service.name}, result {result}")
         my_ip = f'{result[service.ip_field]} from {service.name}'
-        # if service.name == 'ip-api':
-        #     raise IOError
+        if service.name == 'ip-api':
+            raise IOError
         # if service.name == 'ipify':
         #     raise IOError
     except:
@@ -51,16 +51,32 @@ async def fetch_ip(service: Service) -> str:
 
 def get_my_ip():
     coros = [fetch_ip(s) for s in SERVICES]
-    task = asyncio.wait(coros, return_when=asyncio.ALL_COMPLETED)
-    done, pending = asyncio.run(task)
-    # next time: set first_completed and
-    #   while first completed task is None loop for all pending...
-    result = 'Not found from all'
+    tasks = asyncio.wait(coros, return_when=asyncio.FIRST_COMPLETED)
+    result = None
+    # first time processing until the first task completed
+    logger.info('First run')
+    done, pending = asyncio.run(tasks)
     for task in done:
         task_result = task.result()
         if task_result:
             result = task_result
             break
+    while not result:
+        # processing other tasks if first completed did not give result
+        logger.info('First result is None. Next run')
+        if pending:
+            tasks = asyncio.wait(
+                [
+                    x.get_coro() for x in pending
+                ],
+                return_when=asyncio.FIRST_COMPLETED
+            )
+            done, pending = asyncio.run(tasks)
+            for task in done:
+                task_result = task.result()
+                if task_result:
+                    result = task_result
+                    break
     return result
 
 
