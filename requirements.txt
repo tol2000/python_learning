@@ -4,3 +4,4 @@ rich
 dearpygui
 loguru
 aiohttp
+psycopg2
