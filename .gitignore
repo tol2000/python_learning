@@ -1,2 +1,5 @@
 /venv/
 /__pycache__/
+/lesson10/docker/db-data/mongo-data/
+/lesson10/docker/db-data/pg-data/
+/lesson10/docker/db-data/redis-data/
