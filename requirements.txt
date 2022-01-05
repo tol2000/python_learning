@@ -4,3 +4,6 @@ rich
 dearpygui
 loguru
 aiohttp
+psycopg2-binary
+psycopg2
+redis

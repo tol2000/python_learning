@@ -43,23 +43,31 @@ async def fetch_ip(service: Service) -> str:
         #     raise IOError
         # if service.name == 'ipify':
         #     raise IOError
-    except:
-        my_ip = None
+    except Exception as ex:
+        # my_ip = None
+        # Entering in endless loop to get other coroutines return right answer :)
+        # If all coroutines will enter into the endless loop then wait() function
+        #   will end with timeout
+        logger.exception(ex)
+        while True:
+            await asyncio.sleep(1)
     return my_ip
 
 
 def get_my_ip():
     coros = [fetch_ip(s) for s in SERVICES]
-    task = asyncio.wait(coros, return_when=asyncio.ALL_COMPLETED)
-    done, pending = asyncio.run(task)
-    # next time: set first_completed and
-    #   while first completed task is None loop for all pending...
-    result = 'Not found from all'
+    tasks = asyncio.wait(coros, return_when=asyncio.FIRST_COMPLETED, timeout=5)
+    result = None
+    # first time processing until the first task completed
+    logger.info('First run')
+    done, pending = asyncio.run(tasks)
     for task in done:
         task_result = task.result()
         if task_result:
             result = task_result
             break
+    for task in pending:
+        task.cancel()
     return result
 
 
