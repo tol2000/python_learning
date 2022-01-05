@@ -54,43 +54,43 @@ print(results, results.inserted_ids)
 
 user_admin = users_collection.find_one({"username": "admin"})
 print(user_admin, user_admin["_id"], user_admin["username"])
-#
-# res = db["demo"].insert_one({
-#   "user_admin": user_admin["_id"],
-# })
-#
-# print(res, res.inserted_id)
-#
-#
-# # queries
-#
-# """js
-#
-# db.getCollection('users').aggregate([
-#     {
-#         $group: {
-#             _id: {
-#                 "username": "$username",
-#             },
-#             count: { $sum: 1 },
-#             names: { $push: { firstName: "$firstName", lastName: "$lastName"} },
-#         },
-#     },
-#     {
-#         $match: {
-#             count: { $gte: 2 },
-#         },
-#     },
-# ])
-#
-# db.getCollection('demo').aggregate([
-#     {
-#         $lookup: {
-#            from: "users",
-#            localField: "user_admin",
-#            foreignField: "_id",
-#            as: "users_admins",
-#         },
-#     }
-# ])
-# """
+
+res = db["demo"].insert_one({
+  "user_admin": user_admin["_id"],
+})
+
+print(res, res.inserted_id)
+
+
+# queries
+
+"""js
+
+db.getCollection('users').aggregate([
+    {
+        $group: {
+            _id: {
+                "username": "$username",
+            },
+            count: { $sum: 1 },
+            names: { $push: { firstName: "$firstName", lastName: "$lastName"} },
+        },
+    },
+    {
+        $match: {
+            count: { $gte: 2 },
+        },
+    },
+])
+
+db.getCollection('demo').aggregate([
+    {
+        $lookup: {
+           from: "users",
+           localField: "user_admin",
+           foreignField: "_id",
+           as: "users_admins",
+        },
+    }
+])
+"""
