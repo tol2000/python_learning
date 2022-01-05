@@ -5,11 +5,32 @@ import pymongo
 add_json = False
 
 """
-in mongosh: db.json_table.find({text:{$regex:'смарт',$options:'i'}})
+in mongosh:
+    db.json_table.find({text:{$regex:'смарт',$options:'i'}})
+    
+    manual aggregation
+    db.one_from_json.aggregate([
+        {
+            $lookup: {
+                from:'json_table',localField:'json_table_id',foreignField:'_id',as:'json_data'
+            }
+        }
+    ])
+    
+    aggregation by DBRef
+    Does not work!!!
+    db.one_from_json.aggregate([
+        {
+            $lookup: {
+                from:'json_ref.$ref111',localField:'json_ref.$id',foreignField:'_id',as:'json_data'
+            }
+        }
+    ])
 """
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client['json_db']
+json_db = 'json_db'
+db = client[json_db]
 
 json_table = db['json_table']
 
@@ -33,13 +54,15 @@ dynamic_table.insert_one({dt: dt})
 
 one_from_json = db['one_from_json']
 one_from_json.delete_many({})
+json_table_id = json_table.find_one({})['_id']
 one_from_json.insert_one(
     {
         'json_ref': {
             '$ref': 'json_table',
-            '$id': json_table.find_one({})['_id'],
-            '$db': 'db',
+            '$id': json_table_id,
+            '$db': json_db,
         },
         'json_description': 'Ref to record in json_table',
+        'json_table_id': json_table_id,
     }
 )
