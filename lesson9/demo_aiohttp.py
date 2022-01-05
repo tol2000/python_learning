@@ -2,7 +2,6 @@ import asyncio
 from dataclasses import dataclass
 from aiohttp import ClientSession
 from loguru import logger
-from pprint import pprint
 
 
 @dataclass()
