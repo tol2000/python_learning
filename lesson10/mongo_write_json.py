@@ -27,16 +27,18 @@ in mongosh:
         }
     ])
 
-group by year, order by year    
+group by year, order by year, (push)    
 db.json_table.aggregate([
     {
         $group: {
             _id: {
                 'date': {
-                    $slice: [ { $split: ['$date', ' '] }, 3, 1 ]
+                    $slice: [{ $split: ['$date', ' '] }, 3, 1]
                 }
             },
-            count:{$sum:1}
+            quantity:{$sum:1},
+            // adds (expands) all records from this group
+            dates: {$push: {date: '$date'}},
         }
     },
     { $sort: {_id: 1} },
