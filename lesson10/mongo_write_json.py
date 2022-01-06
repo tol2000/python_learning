@@ -22,10 +22,26 @@ in mongosh:
     db.one_from_json.aggregate([
         {
             $lookup: {
-                from:'json_ref.$ref111',localField:'json_ref.$id',foreignField:'_id',as:'json_data'
+                from:'json_ref.$ref',localField:'json_ref.$id',foreignField:'_id',as:'json_data'
             }
         }
     ])
+
+group by year, order by year    
+db.json_table.aggregate([
+    {
+        $group: {
+            _id: {
+                'date': {
+                    $slice: [ { $split: ['$date', ' '] }, 3, 1 ]
+                }
+            },
+            count:{$sum:1}
+        }
+    },
+    { $sort: {_id: 1} },
+])
+    
 """
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -46,8 +62,8 @@ if add_json:
         json_table.insert_many(json_arr)
 
 dt = datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
-dynamic_table = db[f'collection_{dt}']
-dynamic_table.insert_one({dt: dt})
+# dynamic_table = db[f'collection_{dt}']
+# dynamic_table.insert_one({dt: dt})
 
 # print(json_table.find_one({}))
 # print(json_table.count_documents({}))
