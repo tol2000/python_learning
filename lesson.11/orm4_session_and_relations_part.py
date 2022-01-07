@@ -1,11 +1,15 @@
 from datetime import datetime
 from pprint import pprint
 
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, Table
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 engine = create_engine("sqlite:///example2.db")
 Base = declarative_base(bind=engine)
+
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
 
 
 class User(Base):
@@ -24,6 +28,10 @@ class User(Base):
 
 if __name__ == "__main__":
     Base.metadata.create_all()
-    user_tolyan = User(username='tol1', is_staff=True)
-    # user_tolyan.write()
-    pprint(user_tolyan)
+
+    with Session() as session:
+        user_tolyan = User(username='tol1', is_staff=True)
+        session.add(user_tolyan)
+        pprint(user_tolyan)
+        session.commit()
+        pprint(user_tolyan)

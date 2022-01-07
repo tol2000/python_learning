@@ -40,6 +40,7 @@ class User(Base):
 
     # def create_post(self):
 
+
 class Post(Base):
     __tablename__ = "posts"
 
@@ -138,7 +139,6 @@ if __name__ == "__main__":
 
     print(users)
 
-
     posts = session.query(Post).all()
     for post in posts:
         print(post, type(post.tags), post.tags)
@@ -162,7 +162,6 @@ if __name__ == "__main__":
     print()
     print(users_query.all())
     print()
-
 
     posts_query = session.query(
         Post,
