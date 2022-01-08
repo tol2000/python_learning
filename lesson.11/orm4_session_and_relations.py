@@ -49,7 +49,7 @@ class Post(Base):
     # user_id = Column(Integer, ForeignKey("users.id"))
     author_id = Column(Integer, ForeignKey(User.id), nullable=False)
 
-    author =  relationship(User, back_populates="posts")
+    author = relationship(User, back_populates="posts")
     tags = relationship("Tag", secondary=posts_tags_table, back_populates="posts")
 
     def __str__(self):
@@ -80,105 +80,114 @@ def create_user(username: str) -> User:
     :return:
     """
 
-    u = User(username=username)
-    print("id before:", u.id)
-    session.add(u)
-    session.commit()
-    print("id after:", u.id)
+    with Session()as loc_session:
+        u = User(username=username)
+        print("id before:", u.id)
+        loc_session.add(u)
+        loc_session.commit()
+        print("id after:", u.id)
     return u
 
 
 def author_posts():
-    user = session.query(User).filter_by(username="sam").one()
-    print(user)
+    with Session() as loc_session:
+        user = loc_session.query(User).filter_by(username="sam").one()
+        print(user)
 
-    post = Post(title="First post!", author=user)
-    session.add(post)
-    session.commit()
-    print(post)
-    print(user.posts)
+        loc_post = Post(title="First post!", author=user)
+        loc_session.add(loc_post)
+        loc_session.commit()
+        print(loc_post)
+        print(user.posts)
 
-    post = Post(title="Second post!")
+        loc_post = Post(title="Second post!")
 
-    # user_posts: List[Post] = user.posts
-    user.posts.append(post)
+        # user_posts: List[Post] = user.posts
+        user.posts.append(loc_post)
 
-    session.commit()
-    print(user.posts)
+        loc_session.commit()
+        print(user.posts)
 
 
 def create_tags():
-    user = session.query(User).filter_by(username="john").one()
-    user.is_staff = True
+    with Session() as loc_session:
+        user = loc_session.query(User).filter_by(username="john").one()
+        user.is_staff = True
 
-    tags = [Tag(name=name) for name in ("news", "flask", "django", "python")]
-    post = Post(title="News Flask vs Django", author=user)
-    post.tags.extend(tags)
+        tags = [Tag(name=name) for name in ("news", "flask", "django", "python")]
+        loc_post = Post(title="News Flask vs Django", author=user)
+        loc_post.tags.extend(tags)
 
-    session.commit()
+        loc_session.commit()
 
-    print(post, post.tags)
+        print(loc_post, loc_post.tags)
 
-    for tag in tags:
-        print(tag, tag.posts)
+        for tag in tags:
+            print(tag, tag.posts)
+
+
+def try_create():
+    try:
+        create_user("john")
+        create_user("sam")
+        author_posts()
+        create_tags()
+        print('Objects created')
+    except Exception:
+        print('Objects is about to already created')
 
 
 if __name__ == "__main__":
     Base.metadata.create_all()
 
-    session = Session()
+    with Session() as glob_session:
+        try_create()
 
-    # u = create_user("sam")
-    # author_posts()
-    # create_tags()
+        users = glob_session.query(User).filter(
+            User.id > 1,
+            User.username != "john",
+        ).all()
 
-    users = session.query(User).filter(
-        User.id > 1,
-        User.username != "john",
-    ).all()
+        print(users)
 
-    print(users)
+        posts = glob_session.query(Post).all()
+        for post in posts:
+            print(post, type(post.tags), post.tags)
 
-    posts = session.query(Post).all()
-    for post in posts:
-        print(post, type(post.tags), post.tags)
-
-    users_query = session.query(
-        User,
-    ).join(
-        Post,
-        User.id == Post.author_id,
-    ).filter(
-        Post.tags.any(
-            # Tag.name.ilike("new%"),
-            Tag.name != "django",
+        users_query = glob_session.query(
+            User,
+        ).join(
+            Post,
+            User.id == Post.author_id,
+        ).filter(
+            Post.tags.any(
+                # Tag.name.ilike("new%"),
+                Tag.name != "django",
+            )
         )
-    )
 
-    print()
-    print()
-    print(repr(users_query))
-    print(users_query)
-    print()
-    print(users_query.all())
-    print()
+        print()
+        print()
+        print(repr(users_query))
+        print(users_query)
+        print()
+        print(users_query.all())
+        print()
 
-    posts_query = session.query(
-        Post,
-    ).filter(
-        Post.tags.any(
-            # Tag.name.ilike("new%"),
-            # Tag.name != "django",
-            Tag.name == "flask",
+        posts_query = glob_session.query(
+            Post,
+        ).filter(
+            Post.tags.any(
+                # Tag.name.ilike("new%"),
+                # Tag.name != "django",
+                Tag.name == "flask",
+            )
         )
-    )
-    print()
-    print()
-    print(posts_query)
-    print(list(posts_query))
-    print([post for post in posts_query])
-    print()
-    print(posts_query.all())
-    print()
-
-    session.close()
+        print()
+        print()
+        print(posts_query)
+        print(list(posts_query))
+        print([post for post in posts_query])
+        print()
+        print(posts_query.all())
+        print()
