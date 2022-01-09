@@ -10,3 +10,4 @@ redis
 pymongo
 datetime
 sqlalchemy
+cx_Oracle

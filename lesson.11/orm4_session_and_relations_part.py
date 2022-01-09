@@ -6,6 +6,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 engine = create_engine("sqlite:///example2.db")
+# engine = create_engine('oracle://sqlalchemy:sqlchemistry@192.168.19.33:1521/XE')
+# engine = create_engine('postgresql+psycopg2://user:password@localhost:5432/postgres')
 Base = declarative_base(bind=engine)
 
 session_factory = sessionmaker(bind=engine)
