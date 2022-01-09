@@ -11,3 +11,4 @@ pymongo
 datetime
 sqlalchemy
 cx_Oracle
+asyncpg

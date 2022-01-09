@@ -1,6 +1,6 @@
 from sqlalchemy import MetaData, create_engine, Table
 
-engine = create_engine("postgresql://username:password@localhost/demo")
+engine = create_engine("postgresql://user:password@localhost/postgres")
 metadata = MetaData(bind=engine)
 
 
