@@ -182,7 +182,8 @@ if __name__ == "__main__":
             Post.tags.any(
                 # Tag.name.ilike("new%"),
                 # Tag.name != "django",
-                Tag.name == "flask",
+                # Tag.name == "flask",
+                Tag.id == 2,
             )
         )
         print()
