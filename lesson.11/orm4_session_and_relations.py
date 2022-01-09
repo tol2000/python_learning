@@ -182,15 +182,18 @@ if __name__ == "__main__":
             Post.tags.any(
                 # Tag.name.ilike("new%"),
                 # Tag.name != "django",
-                # Tag.name == "flask",
-                Tag.id == 2,
+                Tag.name == "flask",
+                # Tag.id == 2,
             )
         )
         print()
         print()
         print(posts_query)
         print(list(posts_query))
-        print([post for post in posts_query])
         print()
-        print(posts_query.all())
         print()
+        for post in posts_query:
+            print(post)
+        # print()
+        # print(posts_query.all())
+        # print()
