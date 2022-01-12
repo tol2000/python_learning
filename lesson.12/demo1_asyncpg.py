@@ -5,24 +5,48 @@ from datetime import date
 
 async def main():
     conn = await asyncpg.connect(
-        "postgresql://username:password@localhost/demo"
+        "postgresql://user:password@localhost/postgres"
         # user='user',
         # password='password',
         # database='database',
         # host='127.0.0.1'
     )
+
+    await conn.execute('truncate table users')
+
     await conn.execute(
         "INSERT INTO users(name, birth_date) VALUES($1, $2)",
         # "INSERT INTO users(name, birth_date) VALUES(?, ?)",
         "John",
+        date(1972, 3, 15),
+    )
+
+    await conn.execute(
+        "INSERT INTO users(name, birth_date) VALUES($1, $2)",
+        # "INSERT INTO users(name, birth_date) VALUES(?, ?)",
+        "Ann",
+        date(1976, 6, 15),
+    )
+
+    await conn.execute(
+        "INSERT INTO users(name, birth_date) VALUES($1, $2)",
+        # "INSERT INTO users(name, birth_date) VALUES(?, ?)",
+        "James",
         date(1977, 7, 21),
+    )
+
+    await conn.execute(
+        "INSERT INTO users(name, birth_date) VALUES($1, $2)",
+        # "INSERT INTO users(name, birth_date) VALUES(?, ?)",
+        "Толян",
+        date(1973, 7, 9),
     )
 
     rows = await conn.fetch("SELECT id, name, birth_date FROM users;")
     print(rows)
     today = date.today()
     for r in rows:
-        print(r["id"], r["name"], today - r["birth_date"])
+        print(f'{r["id"]}, {r["name"]}, {int((today - r["birth_date"]).days/365)} y.o.')
         # print(r[0])
 
     john = await conn.fetchrow("SELECT * FROM users WHERE name = $1", "John")
