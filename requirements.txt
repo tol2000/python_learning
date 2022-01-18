@@ -14,3 +14,4 @@ cx_Oracle
 asyncpg
 asyncpgsa
 tabulate
+gino

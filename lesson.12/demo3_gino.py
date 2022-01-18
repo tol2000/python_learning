@@ -21,10 +21,12 @@ class User(db.Model):
 
 
 async def main():
-    await db.set_bind("postgresql://username:password@localhost/demo")
-    users = await db.all(User.query)
-    print(users)
-    john = await User.get(7)
+    await db.set_bind("postgresql://user:password@localhost/postgres")
+    for user_for_del in await User.query.where(User.id != 88).where(User.name == 'Sam').gino.all():
+        await user_for_del.delete()
+    for user in await User.query.gino.all():
+        print('    ', user)
+    john = await User.query.where(User.name == 'John').gino.first()
     print("John?", john)
     user = await User.create(name="Sam", birth_date=date(1991, 2, 8))
     print("New:", user)
