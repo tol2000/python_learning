@@ -2,6 +2,8 @@ import asyncio
 import asyncpg
 from datetime import date
 
+delimiter = 150*'-'
+
 
 async def main():
     conn = await asyncpg.connect(
@@ -47,10 +49,10 @@ async def main():
     today = date.today()
     for r in rows:
         print(f'{r["id"]}, {r["name"]}, {int((today - r["birth_date"]).days/365)} y.o.')
-        # print(r[0])
 
-    john = await conn.fetchrow("SELECT * FROM users WHERE name = $1", "John")
-    print(john)
+    print(delimiter)
+    john: asyncpg.Record = await conn.fetchrow("SELECT * FROM users WHERE name = $1", "John")
+    print(list(john.items()))
 
     # values = await conn.fetch()
     await conn.close()
