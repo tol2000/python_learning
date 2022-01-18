@@ -4,6 +4,7 @@ engine = create_engine("postgresql://user:password@localhost/postgres")
 metadata = MetaData(bind=engine)
 
 
+# noinspection PyTypeChecker
 def main():
     users_table = Table(
         "users",
