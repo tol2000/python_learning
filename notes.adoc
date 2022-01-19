@@ -103,6 +103,8 @@ or in another place
 or just to limit simultaneously ran coroutines
 in wait method (execute wait by chunks by, e.g. 500)
 
+to check - set photos to 5000 again
+
 == Lecture 13
 
 0:00:00
