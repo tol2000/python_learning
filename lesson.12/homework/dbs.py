@@ -23,15 +23,19 @@ async def create_obj_from_dict(cls: MyModel, params: dict):
                    example: {'id': 1, 'name': 'Name1', ...}
     :return:
     """
-    logging.info(f'Saving {cls}...')
+    logging.info(f'Saving {cls}({",".join([str(params[k]) for k in cls.key_fields])})...')
     kwargs = {k: params[k] for k in cls.key_fields}
     defaults = {k: params[k] for k in cls.data_fields}
-    await cls.update_or_create(defaults=defaults, using_db=None, **kwargs)
-    logging.info(f'{cls} saved.')
+    obj = await cls.update_or_create(defaults=defaults, using_db=None, **kwargs)
+    logging.info(f'{obj[0]} {"created" if obj[1] else "updated"}.')
 
 
 async def load_obj_to_db(url: str, cls: MyModel):
-    await create_obj_from_dict(
-        cls,
-        await urls.fetch_obj(url=url)
-    )
+    try:
+        await create_obj_from_dict(
+            cls,
+            await urls.fetch_obj(url=url)
+        )
+    except Exception:
+        logging.error(f'Exception on url {url}')
+        raise
