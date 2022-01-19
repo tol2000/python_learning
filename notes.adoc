@@ -92,6 +92,17 @@ link:https://eforexcel.com/wp/downloads-18-sample-csv-files-data-sets-for-testin
 
 Можно проверить то же самое без асинхронщины...
 
+===== Status
+
+Almost done.
+
+One problem - if photos 5000, then too many open sockets.
+
+Needed to set sockets limitation in ClientSession()
+or in another place
+or just to limit simultaneously ran coroutines
+in wait method (execute wait by chunks by, e.g. 500)
+
 == Lecture 13
 
 0:00:00

@@ -37,5 +37,5 @@ async def load_obj_to_db(url: str, cls: MyModel):
             await urls.fetch_obj(url=url)
         )
     except Exception:
-        logging.error(f'Exception on url {url}')
+        logging.exception(f'Exception on url {url}')
         raise

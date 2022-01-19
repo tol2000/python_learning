@@ -17,13 +17,13 @@ class Obj2Get:
 
 # noinspection PyTypeChecker
 objs2get = [
-    # 10, 100, 100, 200, 500, 5000
-    Obj2Get(User, '/users', 1),
-    Obj2Get(Post, '/posts', 1),
-    Obj2Get(Album, '/albums', 1),
-    Obj2Get(ToDo, '/todos', 1),
-    Obj2Get(Comment, '/comments', 1),
-    Obj2Get(Photo, '/photos', 5),
+    # Totally photos = 5000
+    Obj2Get(User, '/users', 10),
+    Obj2Get(Post, '/posts', 100),
+    Obj2Get(Album, '/albums', 100),
+    Obj2Get(ToDo, '/todos', 200),
+    Obj2Get(Comment, '/comments', 500),
+    Obj2Get(Photo, '/photos', 100),
 ]
 
 
