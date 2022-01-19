@@ -1,59 +1,33 @@
-from tortoise import Tortoise, run_async
-from models import User, MyModel
+import asyncio
 
+from tortoise import run_async
+import logging
 
-async def init():
-    await Tortoise.init(
-        db_url="postgres://user:password@localhost/postgres",
-        modules={'models': ['models']}
-    )
-    # Generate the schema
-    await Tortoise.generate_schemas()
-
-
-async def create_obj_from_json(cls: MyModel, params: dict):
-    """
-    Create/update object of MyModel class
-    Update decision makes by searching object by key_fields
-    :param cls: class of object to create/update
-    :param params: data record to write in dict format
-                   example: {'id': 1, 'name': 'Name1', ...}
-    :return:
-    """
-    kwargs = {k: params[k] for k in cls.key_fields}
-    defaults = {k: params[k] for k in cls.data_fields}
-    await cls.update_or_create(defaults=defaults, using_db=None, **kwargs)
+import urls
+import dbs
+import config
 
 
 async def main():
-    await init()
-    await create_obj_from_json(
-        User,
-        {
-            "id": 1,
-            "name": "Толянчик",
-            "username": "tol2000",
-            "email": "tol2000@gmail.com",
-            "address": {
-                "street": "Kulas Light",
-                "suite": "Apt. 55000",
-                "city": "Gwenborough",
-                "zipcode": "92998-3874",
-                "geo": {
-                    "lat": "-37.3159",
-                    "lng": "81.1496"
-                }
-            },
-            "phone": "1-770-736-8031 x56442",
-            "website": "hildegard.org",
-            "company": {
-                "name": "Romaguera-Crona",
-                "catchPhrase": "Multi-layered client-server neural-net",
-                "bs": "harness real-time e-markets"
-            }
-        }
-    )
+    await dbs.init()
+
+    logging.info(f'Creating tasks...')
+    tasks = []
+    for obj in urls.objs2get:
+        for i in range(1, obj.qnty+1):
+            tasks.append(
+                asyncio.create_task(
+                    dbs.load_obj_to_db(
+                        url=f'{urls.domain}{obj.url}/{i}',
+                        cls=obj.obj_class
+                    )
+                )
+            )
+
+    logging.info(f'Executing tasks...')
+    await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
 
 if __name__ == "__main__":
+    logging.info(f'Starting, logging to {config.log_filename_with_path}...')
     run_async(main())
