@@ -4,3 +4,4 @@
 /lesson10/docker/db-data/pg-data/
 /lesson10/docker/db-data/redis-data/
 example*.db
+*.log
