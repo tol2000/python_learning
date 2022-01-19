@@ -3,6 +3,9 @@ from tortoise.models import Model
 
 
 class Tournament(Model):
+    class Meta:
+        table = 'tournaments'
+
     id = fields.IntField(pk=True)
     name = fields.TextField()
 
