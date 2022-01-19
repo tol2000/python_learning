@@ -30,16 +30,13 @@ async def init():
 async def main():
     await init()
 
-    await Tournament.all().delete()
+    # tournament = Tournament(name='New Tournament')
+    # await tournament.save()
 
-    tournament = Tournament(name='New Tournament')
-    await tournament.save()
-
-    # Or by .create()
-    await Tournament.create(name='Another Tournament')
-    await Tournament.create(name='Tournament Толяна')
-    await Tournament.create(name='Tournament Коляна')
-    await Tournament.create(name='Tournament всех турнаментов')
+    await Tournament.update_or_create(defaults={'name': 'Another Tournament'}, using_db=None, id=1)
+    await Tournament.update_or_create(defaults={'name': 'Tournament Толяна'}, using_db=None, id=2)
+    await Tournament.update_or_create(defaults={'name': 'Tournament Коляна'}, using_db=None, id=3)
+    await Tournament.update_or_create(defaults={'name': 'Tournament всех турнаментов'}, using_db=None, id=4)
 
     # Now search for a record
     for tour in await Tournament.filter(name__contains='оляна').all():
