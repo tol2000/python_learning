@@ -3,6 +3,9 @@ from tortoise.models import Model
 
 
 class MyModel(Model):
+    class Meta:
+        abstract = True
+
     key_fields = None
     data_fields = None
 
