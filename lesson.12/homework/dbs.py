@@ -1,14 +1,13 @@
 import logging
 from tortoise import Tortoise
 
-from models import MyModel
-import urls
+from my_models import MyModel
 
 
 async def init():
     await Tortoise.init(
         db_url="postgres://user:password@localhost/postgres",
-        modules={'models': ['models']}
+        modules={'models': ['my_models']}
     )
     # Generate the schema
     await Tortoise.generate_schemas()
@@ -28,14 +27,3 @@ async def create_obj_from_dict(cls: MyModel, params: dict):
     defaults = {k: params[k] for k in cls.data_fields}
     obj = await cls.update_or_create(defaults=defaults, using_db=None, **kwargs)
     logging.info(f'{obj[0]} {"created" if obj[1] else "updated"}.')
-
-
-async def load_obj_to_db(url: str, cls: MyModel):
-    try:
-        await create_obj_from_dict(
-            cls,
-            await urls.fetch_obj(url=url)
-        )
-    except Exception:
-        logging.exception(f'Exception on url {url}')
-        raise

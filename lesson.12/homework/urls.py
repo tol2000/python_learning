@@ -1,9 +1,7 @@
 import logging
 from dataclasses import dataclass
 
-from aiohttp import ClientSession
-
-from models import *
+from my_models import *
 
 domain = 'https://jsonplaceholder.typicode.com'
 
@@ -23,19 +21,19 @@ objs2get = [
     Obj2Get(Album, '/albums', 100),
     Obj2Get(ToDo, '/todos', 200),
     Obj2Get(Comment, '/comments', 500),
-    Obj2Get(Photo, '/photos', 100),
+    Obj2Get(Photo, '/photos', 5000),
 ]
 
 
-async def fetch_obj(url) -> dict:
+async def fetch_obj(session, url) -> dict:
     """
     returns json obj from url
+    :param session:
     :param url:
     :return:
     """
     logging.info(f'Loading from {url}...')
-    async with ClientSession() as session:
-        async with session.get(url) as response:
-            res = await response.json()
+    async with session.get(url) as response:
+        res = await response.json()
     logging.info(f'{url} loaded.')
     return res
