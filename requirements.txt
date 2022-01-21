@@ -16,3 +16,4 @@ asyncpgsa
 tabulate
 gino
 tortoise-orm
+pytest
