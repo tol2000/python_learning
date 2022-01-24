@@ -1,3 +1,5 @@
+import requests
+
 API_URL = "weather.com"
 
 

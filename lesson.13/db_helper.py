@@ -6,7 +6,7 @@ missing = object()
 class User:
     GROUPS = [1, 2, 3]
 
-    @staticmethod
+    @classmethod
     def group_exists(cls, group_id):
         """
         >>> User.group_exists(1)
