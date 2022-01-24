@@ -3,15 +3,23 @@ from unittest import TestCase
 from solver import Solver, mul, sub, SUB_ERROR_TEXT
 
 
-@mark.parametrize(
-    "values, expected_result",
-    [
+test_params = [
         ((3, 5), 15),
         ((1, 10), 10),
         ((1, 0), 0),
         # ((1, 0), 1),
         ((4, 8), 32),
     ]
+test_params.extend(
+    [
+        ((x, x), x*x) for x in range(200)
+    ]
+)
+
+
+@mark.parametrize(
+    "values, expected_result",
+    test_params
 )
 def test_mul(values, expected_result):
     res = mul(*values)
