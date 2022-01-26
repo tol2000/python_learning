@@ -4,7 +4,7 @@ API_URL = "weather.com"
 
 
 def fetch(url, params):
-    requests.get(url, params)
+    return requests.get(url, params).json()
 
 
 def get_weather(city):
