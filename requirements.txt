@@ -17,3 +17,4 @@ tabulate
 gino
 tortoise-orm
 pytest
+aiogram
