@@ -5,3 +5,4 @@
 /lesson10/docker/db-data/redis-data/
 example*.db
 *.log
+*.pyc
