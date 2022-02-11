@@ -8,4 +8,3 @@ example*.db
 *.pyc
 /lesson.16/*.csv
 /lesson.16/*.json
-*.csv
