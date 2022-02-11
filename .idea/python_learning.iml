@@ -7,6 +7,8 @@
       <excludeFolder url="file://$MODULE_DIR$/lesson10/docker/db-data/mongo-data" />
       <excludeFolder url="file://$MODULE_DIR$/lesson10/docker/db-data/pg-data" />
       <excludeFolder url="file://$MODULE_DIR$/lesson10/docker/db-data/redis-data" />
+      <excludeFolder url="file://$MODULE_DIR$/lesson.13/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/lesson.15/.pytest_cache/v" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
