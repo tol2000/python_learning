@@ -1,0 +1,305 @@
++*In[ ]:*+
+[source, ipython3]
+----
+!pip install pandas
+!pip install pandasql
+----
+
+
++*In[1]:*+
+[source, ipython3]
+----
+import pandas as pd
+import pandasql as ps
+
+csv_name = 'cars.csv'
+
+cars = pd.DataFrame(
+    {
+        'speed': [300, 200, 140],
+        'engine': [5, 0, 3],
+        'doors': [2, 4, 5],
+    }, index=pd.Index(['lambo', 'tesla', 'lr'], name='car')
+)
+
+cars
+----
+
+
++*Out[1]:*+
+----
+[cols=",,,",options="header",]
+|===
+| |speed |engine |doors
+|car | | |
+|lambo |300 |5 |2
+|tesla |200 |0 |4
+|lr |140 |3 |5
+|===
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+cars.to_csv(csv_name)
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+cars = pd.read_csv(csv_name, index_col='car')
+cars_wo_index = pd.read_csv(csv_name)
+----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+cars
+cars_wo_index
+----
+
+
++*Out[4]:*+
+----
+[cols=",,,",options="header",]
+|===
+| |speed |engine |doors
+|car | | |
+|lambo |300 |5 |2
+|tesla |200 |0 |4
+|lr |140 |3 |5
+|===
+
+[cols=",,,,",options="header",]
+|===
+| |car |speed |engine |doors
+|0 |lambo |300 |5 |2
+|1 |tesla |200 |0 |4
+|2 |lr |140 |3 |5
+|===
+----
+
+
++*In[5]:*+
+[source, ipython3]
+----
+ti = pd.read_csv('titanic.csv', index_col=0)
+ti
+----
+
+
++*Out[5]:*+
+----
+[cols=",,,,,,",options="header",]
+|===
+| |Name |PClass |Age |Sex |Survived |SexCode
+|PassengerID | | | | | |
+
+|1 |Allen, Miss Elisabeth Walton |1st |29.00 |female |1 |1
+
+|2 |Allison, Miss Helen Loraine |1st |2.00 |female |0 |1
+
+|3 |Allison, Mr Hudson Joshua Creighton |1st |30.00 |male |0 |0
+
+|4 |Allison, Mrs Hudson JC (Bessie Waldo Daniels) |1st |25.00 |female |0
+|1
+
+|5 |Allison, Master Hudson Trevor |1st |0.92 |male |1 |0
+
+|... |... |... |... |... |... |...
+
+|1309 |Zakarian, Mr Artun |3rd |27.00 |male |0 |0
+
+|1310 |Zakarian, Mr Maprieder |3rd |26.00 |male |0 |0
+
+|1311 |Zenni, Mr Philip |3rd |22.00 |male |0 |0
+
+|1312 |Lievens, Mr Rene |3rd |24.00 |male |0 |0
+
+|1313 |Zimmerman, Leo |3rd |29.00 |male |0 |0
+|===
+
+1313 rows × 6 columns
+----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+sql = """
+select 
+       --sex, survived,
+       count(Name), count(Age), count(SexCode), count(*)
+  from ti
+--  group by sex, survived
+--  order by sex, survived
+"""
+sql1 = """
+select case when age is null then 'null' else 'not null' end as age_is_null, count(*)
+  from ti
+  group by case when age is null then 'null' else 'not null' end
+"""
+----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+ps.sqldf(sql)
+ps.sqldf(sql1)
+ps.sqldf("select * from ti where age is null limit 5")
+ps.sqldf("select * from ti where age is not null limit 5")
+----
+
+
++*Out[7]:*+
+----
+[cols=",,,,",options="header",]
+|===
+| |count(Name) |count(Age) |count(SexCode) |count(*)
+|0 |1313 |756 |1313 |1313
+|===
+
+[cols=",,",options="header",]
+|===
+| |age_is_null |count(*)
+|0 |not null |756
+|1 |null |557
+|===
+
+[cols=",,,,,,,",options="header",]
+|===
+| |PassengerID |Name |PClass |Age |Sex |Survived |SexCode
+|0 |13 |Aubert, Mrs Leontine Pauline |1st |None |female |1 |1
+|1 |14 |Barkworth, Mr Algernon H |1st |None |male |1 |0
+|2 |15 |Baumann, Mr John D |1st |None |male |0 |0
+|3 |30 |Borebank, Mr John James |1st |None |male |0 |0
+|4 |33 |Bradley, Mr George |1st |None |male |1 |0
+|===
+
+[cols=",,,,,,,",options="header",]
+|===
+| |PassengerID |Name |PClass |Age |Sex |Survived |SexCode
+|0 |1 |Allen, Miss Elisabeth Walton |1st |29.00 |female |1 |1
+
+|1 |2 |Allison, Miss Helen Loraine |1st |2.00 |female |0 |1
+
+|2 |3 |Allison, Mr Hudson Joshua Creighton |1st |30.00 |male |0 |0
+
+|3 |4 |Allison, Mrs Hudson JC (Bessie Waldo Daniels) |1st |25.00 |female
+|0 |1
+
+|4 |5 |Allison, Master Hudson Trevor |1st |0.92 |male |1 |0
+|===
+----
+
+
++*In[8]:*+
+[source, ipython3]
+----
+ps.sqldf("select * from ti where PClass='*'")
+----
+
+
++*Out[8]:*+
+----
+[cols=",,,,,,,",options="header",]
+|===
+| |PassengerID |Name |PClass |Age |Sex |Survived |SexCode
+|0 |457 |Jacobsohn Mr Samuel |* |None |male |0 |0
+|===
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+sql_surv_class = """
+select 
+       PClass, survived, count(*)
+  from ti
+  group by PClass, survived
+  order by 1, 2
+"""
+----
+
+
++*In[10]:*+
+[source, ipython3]
+----
+ps.sqldf(sql_surv_class)
+----
+
+
++*Out[10]:*+
+----
+[cols=",,,",options="header",]
+|===
+| |PClass |Survived |count(*)
+|0 |* |0 |1
+|1 |1st |0 |129
+|2 |1st |1 |193
+|3 |2nd |0 |160
+|4 |2nd |1 |119
+|5 |3rd |0 |573
+|6 |3rd |1 |138
+|===
+----
+
+
++*In[11]:*+
+[source, ipython3]
+----
+ti.pivot_table(
+    index=['Sex'],
+    columns=['PClass'],
+    values='Age',
+    aggfunc='median',
+)
+----
+
+
++*Out[11]:*+
+----
+[cols=",,,",options="header",]
+|===
+|PClass |1st |2nd |3rd
+|Sex | | |
+|female |38.0 |28.0 |22.0
+|male |42.0 |28.0 |25.5
+|===
+----
+
+
++*In[12]:*+
+[source, ipython3]
+----
+ti.pivot_table(
+    index=['Survived'],
+    columns=['PClass'],
+    values='Age',
+    aggfunc='median',
+)
+----
+
+
++*Out[12]:*+
+----
+[cols=",,,",options="header",]
+|===
+|PClass |1st |2nd |3rd
+|Survived | | |
+|0 |46.0 |29.5 |25.0
+|1 |36.0 |25.0 |22.0
+|===
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
