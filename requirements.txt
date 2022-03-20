@@ -18,3 +18,5 @@ gino
 tortoise-orm
 pytest
 aiogram
+opencv-python
+opencv-contrib-python
