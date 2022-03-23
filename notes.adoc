@@ -123,4 +123,4 @@ to check - set photos to 5000 again
 
 == Lecture 17
 
-0:27:30
+0:34:00
