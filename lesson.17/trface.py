@@ -9,10 +9,10 @@ cv2.namedWindow(WIN_NAME, flags=cv2.WINDOW_NORMAL)
 cv2.moveWindow(WIN_NAME, 1, 1)
 cv2.resizeWindow(WIN_NAME, 1800, 800)
 
-FRAMES_UPDATE_HISTORY_PERIOD = 1
-FRAMES_HISTORY_MAX_SIZE = 50
+FRAMES_UPDATE_HISTORY_PERIOD = 0
+FRAMES_HISTORY_MAX_SIZE = 1000
 
-history = []
+tracking_history = []
 frames_count = FRAMES_UPDATE_HISTORY_PERIOD
 
 
@@ -29,8 +29,8 @@ def show_img(img, win_title='-', wait4key=True):
 
 
 def select_tracked(cap):
-    global history
-    history = []
+    global tracking_history
+    tracking_history = []
     # clear the image first
     success, img = cap.read()
     show_img(
@@ -44,37 +44,31 @@ def select_tracked(cap):
 
 def update_tracker(img, tracker):
     global frames_count
-    global history
-    pt1, pt2, color, thickness = None, None, None, None
+    global tracking_history
+    pt1, pt2 = None, None
     ok, (x, y, w, h) = tracker.update(img)
 
     if ok:
         if frames_count < FRAMES_UPDATE_HISTORY_PERIOD:
             frames_count += 1
         else:
+            # Calculating current tracking rectangle and tracking line history
             frames_count = 0
-            if len(history) > FRAMES_HISTORY_MAX_SIZE:
-                history = []
-            history.append((int(x), int(y), int(w), int(h)))
+            if len(tracking_history) > FRAMES_HISTORY_MAX_SIZE:
+                tracking_history = []
             pt1 = (int(x), int(y))
             pt2 = (int(x + w), int(y + h))
-            b = int(x * w) % 255
-            g = int(y * h) % 255
-            color = (b, g, 255)
-            thickness = 2
-        if pt1 and pt2 and color and thickness:
-            cv2.rectangle(img, pt1, pt2, color, thickness)
+            tracking_history.append((int(x + w // 2), int(y + h // 2)))
 
-        for (x, y, w, h) in history:
-            w_center = w // 2
-            h_center = h // 2
-            pt1 = (x + w_center, y + h_center)
-            pt2 = (x + w_center + 1, y + h_center + 1)
-            b = int(x * w) % 255
-            g = int(y * h) % 255
-            color = (b, g, 255)
-            thickness = 2
-            cv2.rectangle(img, pt1, pt2, color, thickness)
+        if pt1 and pt2:
+            # drawing current tracking rectangle
+            cv2.rectangle(img, pt1, pt2, color=(0, 0, 255), thickness=1)
+
+        # drawing tracking line history
+        for i, point in enumerate(tracking_history):
+            pt2 = point
+            pt1 = tracking_history[i - 1] if i > 0 else pt2
+            cv2.line(img, pt1, pt2, color=(0, 255, 0), thickness=1)
 
 
 def main():
