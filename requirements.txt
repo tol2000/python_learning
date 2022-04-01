@@ -20,4 +20,4 @@ pytest
 aiogram
 numpy
 opencv-python
-
+flask
