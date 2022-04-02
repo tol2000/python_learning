@@ -1,5 +1,4 @@
 import urllib.parse
-
 from flask import Flask, request
 from pathlib import Path
 
@@ -39,6 +38,11 @@ def show_dir():
     out_text = f'<h3>Directory: {subdir if subdir else "root"}</h3><BR>'
     # out_text += f'\n<BR>app_work_dir: {app_work_dir}\n<BR>dir_name: {dir_name}'
 
+    # root dir
+    url = make_url_for_subdir(dir_url, '')
+    out_text += f'\n<h4><a href="{url}">Root directory</a></h4>'
+
+    # Parent dir (..)
     if app_work_dir in dir_name.parents:
         subdir_to_up = str(dir_name.parent)[len(str(app_work_dir))+1:]
         url = make_url_for_subdir(dir_url, subdir_to_up)
@@ -51,7 +55,7 @@ def show_dir():
         if path_obj.is_dir():
             url = make_url_for_subdir(dir_url, path_for_url)
             out_text += f'\n<h4><a href="{url}">{path_for_display}</a></h4>'
-        else:
+        elif path_obj.suffix in ['.jpg', '.jpeg']:
             out_text += f'\n<h4>{path_for_display}</h4>'
 
     return out_text
