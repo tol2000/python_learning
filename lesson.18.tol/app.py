@@ -1,8 +1,12 @@
 import urllib.parse
-from flask import Flask, request
+from flask import Flask, request, render_template
+from PIL import Image
+import base64
+import io
 from pathlib import Path
 
 SUBDIR_PARAM_NAME = 'subdir'
+PICTURE_PATH_PARAM_NAME = 'picture'
 
 app_dir = Path(__file__).resolve().absolute().parent
 app_work_dir = (app_dir / Path('public_files')).resolve().absolute()
@@ -22,6 +26,21 @@ def test():
 
 def make_url_for_subdir(dir_url, path_for_url):
     return f'{dir_url}?{SUBDIR_PARAM_NAME}={urllib.parse.quote(str(path_for_url), safe="")}'
+
+
+def make_picture_url_for_subdir(dir_url, path_for_url, picture_name: Path):
+    path = Path(path_for_url) / picture_name
+    return f'{dir_url}?{PICTURE_PATH_PARAM_NAME}={urllib.parse.quote(str(path), safe="")}'
+
+
+@app.route('/picture/')
+def show_picture():
+    picture_path = request.args.get(f'{PICTURE_PATH_PARAM_NAME}', '', str)
+    im = Image.open(app_work_dir / Path(picture_path))
+    data = io.BytesIO()
+    im.save(data, "JPEG")
+    encoded_img_data = base64.b64encode(data.getvalue())
+    return render_template("index.html", img_data=encoded_img_data.decode('utf-8'))
 
 
 @app.route('/dir/')
@@ -56,6 +75,7 @@ def show_dir():
             url = make_url_for_subdir(dir_url, path_for_url)
             out_text += f'\n<h4><a href="{url}">{path_for_display}</a></h4>'
         elif path_obj.suffix in ['.jpg', '.jpeg']:
-            out_text += f'\n<h4>{path_for_display}</h4>'
+            url = make_picture_url_for_subdir(dir_url, path_for_url, path_obj)
+            out_text += f'\n<h4><a href="{url}">{path_for_display}</a></h4>'
 
     return out_text
