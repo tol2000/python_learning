@@ -6,7 +6,7 @@
     <title>Image</title>
 </head>
 <body>
-    <h3><a href="{{ img_subdir_link }}">.. (up picture's dir)</a></h3>
-    <img id="picture" src="data:image/jpeg;base64,{{ img_data }}">
+    <{{tag_dir_root_up}}><a href="{{ img_subdir_link }}">.. (up picture's dir)</a></{{tag_dir_root_up}}>
+    <img id="picture" src="data:image/jpeg;base64,{{ img_data }}" width="100%">
 </body>
 </html>
