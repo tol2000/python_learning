@@ -84,7 +84,7 @@ def show_dir():
         if path_obj.is_dir():
             url = make_url_for_subdir(dir_url, path_for_url)
             out_text += f'\n<h4><a href="{url}">{path_for_display}</a></h4>'
-        elif path_obj.suffix in ['.jpg', '.jpeg']:
+        elif path_obj.suffix.lower() in ['.jpg', '.jpeg']:
             url = make_picture_url_for_subdir(picture_url, Path(subdir), Path(path_for_display))
             out_text += f'\n<h4><a href="{url}">{path_for_display}</a></h4>'
 
