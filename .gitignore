@@ -10,3 +10,4 @@ example*.db
 /lesson.16/*.json
 /lesson.16/.ipynb_checkpoints/
 /lesson.18.tol/public_files/*.jpg
+/lesson.18.tol/public_files/bbb/*.jpg
