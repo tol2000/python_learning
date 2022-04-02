@@ -6,7 +6,7 @@ from pathlib import Path
 SUBDIR_PARAM_NAME = 'subdir'
 
 app_dir = Path(__file__).resolve().absolute().parent
-app_work_dir = (app_dir / Path('photos')).resolve().absolute()
+app_work_dir = (app_dir / Path('public_files')).resolve().absolute()
 
 app = Flask('photo_v')
 
