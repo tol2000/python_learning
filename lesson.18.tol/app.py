@@ -9,6 +9,7 @@ SUBDIR_PARAM_NAME = 'subdir'
 PICTURE_PATH_PARAM_NAME = 'picture'
 DIR_ENDPOINT = 'dir'
 PICTURE_ENDPOINT = 'picture'
+PREVIEW_GENERATE = True
 
 app_dir: Path = Path(__file__).resolve().absolute().parent
 app_work_dir: Path = (app_dir / Path('public_files')).resolve().absolute()
@@ -27,18 +28,24 @@ def make_picture_url_for_subdir(picture_url: str, picture_subdir: Path, picture_
     return url
 
 
+def get_image_data_for_html(image_path: Path, preview_width=None):
+    im = Image.open(image_path)
+    if preview_width:
+        pass
+    data = io.BytesIO()
+    im.save(data, "JPEG")
+    encoded_img_data = base64.b64encode(data.getvalue())
+    return encoded_img_data.decode('utf-8')
+
+
 @app.route(f'/{PICTURE_ENDPOINT}/')
 @app.route(f'/{PICTURE_ENDPOINT}/<int:zoom>/')
 def show_picture(zoom=4):
     picture_path = request.args.get(f'{PICTURE_PATH_PARAM_NAME}', '', str)
     picture_dir_path = request.args.get(f'{SUBDIR_PARAM_NAME}', '', str)
-    im = Image.open(app_work_dir / Path(picture_path))
-    data = io.BytesIO()
-    im.save(data, "JPEG")
-    encoded_img_data = base64.b64encode(data.getvalue())
     return render_template(
         'picture.html',
-        img_data=encoded_img_data.decode('utf-8'),
+        img_data=get_image_data_for_html(app_work_dir / Path(picture_path)),
         img_subdir_link=make_url_for_subdir(request.url_root + f'{DIR_ENDPOINT}/{zoom}/', picture_dir_path),
         zoom=zoom,
     )
@@ -81,7 +88,7 @@ def show_dir(zoom=4):
         else:
             url = None
         if url:
-            dir_items.append((path_for_display, url))
+            dir_items.append((path_for_display, url, path_obj.is_dir()))
 
     return render_template(
         'dir.html',

@@ -10,8 +10,14 @@
     <br>
     <h{{zoom}}><a href="{{ root_dir_link }}">Root directory</a></h{{zoom}}>
     <h{{zoom}}><a href="{{ up_dir_link }}">.. Up</a></h{{zoom}}>
-    {% for path, url in dir_items: %}
+    {% for path, url, is_dir in dir_items: %}
     <h{{zoom}}><a href="{{ url }}">{{ path }}</a></h{{zoom}}>
+<!--    {%if is_dir%}-->
+<!--    <br>-->
+<!--    <a href="{{ img_subdir_link }}">-->
+<!--        <img id="picture" src="data:image/jpeg;base64,{{ img_preview_data }}" width="100%">-->
+<!--    </a>-->
+<!--    {%endif%}-->
     {%endfor%}
 <!--    <img id="picture" src="data:image/jpeg;base64,{{ img_data }}" width="100%">-->
 </body>
