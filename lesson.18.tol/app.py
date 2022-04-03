@@ -9,7 +9,7 @@ SUBDIR_PARAM_NAME = 'subdir'
 PICTURE_PATH_PARAM_NAME = 'picture'
 DIR_ENDPOINT = 'dir'
 PICTURE_ENDPOINT = 'picture'
-PREVIEW_GENERATE = True
+PREVIEW_WIDTH = 200
 
 app_dir: Path = Path(__file__).resolve().absolute().parent
 app_work_dir: Path = (app_dir / Path('public_files')).resolve().absolute()
@@ -29,9 +29,9 @@ def make_picture_url_for_subdir(picture_url: str, picture_subdir: Path, picture_
 
 
 def get_image_data_for_html(image_path: Path, preview_width=None):
-    im = Image.open(image_path)
+    im: Image = Image.open(image_path)
     if preview_width:
-        pass
+        im.thumbnail(preview_width, Image.ANTIALIAS)
     data = io.BytesIO()
     im.save(data, "JPEG")
     encoded_img_data = base64.b64encode(data.getvalue())
@@ -43,11 +43,13 @@ def get_image_data_for_html(image_path: Path, preview_width=None):
 def show_picture(zoom=4):
     picture_path = request.args.get(f'{PICTURE_PATH_PARAM_NAME}', '', str)
     picture_dir_path = request.args.get(f'{SUBDIR_PARAM_NAME}', '', str)
+    image_name = Path(picture_path).name
     return render_template(
         'picture.html',
         img_data=get_image_data_for_html(app_work_dir / Path(picture_path)),
         img_subdir_link=make_url_for_subdir(request.url_root + f'{DIR_ENDPOINT}/{zoom}/', picture_dir_path),
         zoom=zoom,
+        image_name=image_name,
     )
 
 
@@ -81,14 +83,16 @@ def show_dir(zoom=4):
     for path_obj in dir_list:
         path_for_url = path_obj.relative_to(app_work_dir)
         path_for_display = path_obj.relative_to(dir_name)
+        preview_data = None
         if path_obj.is_dir():
             url = make_url_for_subdir(dir_url, path_for_url)
         elif path_obj.suffix.lower() in ['.jpg', '.jpeg']:
             url = make_picture_url_for_subdir(picture_url, Path(subdir), Path(path_for_display))
+            preview_data = get_image_data_for_html(path_obj, (PREVIEW_WIDTH, PREVIEW_WIDTH))
         else:
             url = None
         if url:
-            dir_items.append((path_for_display, url, path_obj.is_dir()))
+            dir_items.append((path_for_display, url, not path_obj.is_dir(), preview_data))
 
     return render_template(
         'dir.html',
