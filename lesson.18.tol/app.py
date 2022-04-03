@@ -1,3 +1,4 @@
+from functools import lru_cache
 import urllib.parse
 from flask import Flask, request, render_template
 from PIL import Image
@@ -28,6 +29,7 @@ def make_picture_url_for_subdir(picture_url: str, picture_subdir: Path, picture_
     return url
 
 
+@lru_cache(maxsize=256)
 def get_image_data_for_html(image_path: Path, preview_width=None):
     im: Image = Image.open(image_path)
     if preview_width:
