@@ -11,7 +11,7 @@
       <excludeFolder url="file://$MODULE_DIR$/lesson.15/.pytest_cache/v" />
       <excludeFolder url="file://$MODULE_DIR$/lesson.17/.pytest_cache/v" />
       <excludeFolder url="file://$MODULE_DIR$/lesson.18.tol/.pytest_cache/v" />
-      <excludeFolder url="file://$MODULE_DIR$/lesson.18.tol/public_files/bbb/ccc" />
+      <excludeFolder url="file://$MODULE_DIR$/../my_python_projects/simply_dir_viewer/public_files/bbb/ccc" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
