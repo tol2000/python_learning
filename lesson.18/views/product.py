@@ -10,6 +10,7 @@ PRODUCTS = {
     3: 'Laptop',
 }
 
+
 @product_app.route("/")
 def product_list():
     return render_template("products/index.html", products=PRODUCTS)
