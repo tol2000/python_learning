@@ -21,3 +21,4 @@ aiogram
 numpy
 opencv-python
 flask
+Werkzeug
