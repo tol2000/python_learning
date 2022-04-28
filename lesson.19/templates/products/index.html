@@ -6,21 +6,30 @@
 
 {% block body %}
   <h1>Products list</h1>
-  <div class="alert alert-info" role="alert">
+
+  <div class="alert alert-info ml-0" role="alert">
     Sale only today!
   </div>
+
   <div class="row">
-    <div class="col col-12 col-md-8 col-lg-6 col-xl-4">
-      <ul class="list-group">
-        {% for product_id in products %}
-          <li class="list-group-item product-item">
-            <a class="my-2" href="{{ url_for('product_app.product_detail', product_id=product_id) }}">
-              {{ products[product_id] }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
+    <ul class="list-group col-sm-3">
+      {% for product_id in products %}
+        <li class="list-group-item product-item">
+          <a class="my-2" href="{{ url_for('product_app.product_detail', product_id=product_id) }}">
+            {{ products[product_id] }} :1
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <ul class="list-group col-sm-9">
+      {% for product_id in products %}
+        <li class="list-group-item product-item">
+          <a class="my-2" href="{{ url_for('product_app.product_detail', product_id=product_id) }}">
+            {{ products[product_id] }} :2
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
   </div>
 {% endblock %}
 
