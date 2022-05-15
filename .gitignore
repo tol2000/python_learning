@@ -11,3 +11,4 @@ example*.db
 /lesson.16/.ipynb_checkpoints/
 /lesson.18.tol/public_files/*.jpg
 /lesson.18.tol/public_files/bbb/*.jpg
+/lesson.21/my-shop/static/
