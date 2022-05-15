@@ -8,7 +8,7 @@ services:
     environment:
       PG_HOST: pg
     volumes:
-    - ./my-shop:/app
+      - ./my-shop:/app
     ports:
       - 5000:5000
     depends_on:
