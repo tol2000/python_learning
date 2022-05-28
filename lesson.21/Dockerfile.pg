@@ -1,0 +1,8 @@
+FROM postgres:12
+
+ENV POSTGRES_DB=shop
+
+WORKDIR /
+
+# Creating a different image then standard to have there own settings
+COPY dummy.txt /tmp/

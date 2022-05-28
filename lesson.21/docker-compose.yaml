@@ -7,15 +7,18 @@ services:
       context: .
     environment:
       PG_HOST: pg
-    volumes:
-      - ./my-shop:/app
+#    volumes:
+#      - ./my-shop:/app
     ports:
       - 5000:5000
     depends_on:
       - pg
+    command: /bin/bash /app/start.sh
 
   pg:
-    image: postgres:12
+    build:
+      dockerfile: ./Dockerfile.pg
+      context: .
     environment:
       POSTGRES_DB: shop
       POSTGRES_USER: user
